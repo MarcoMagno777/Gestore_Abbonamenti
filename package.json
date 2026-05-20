@@ -1,0 +1,20 @@
+{
+  "name": "gestore_abbonamenti",
+  "version": "1.0.0",
+  "description": "Serve solo Docker Desktop oppure Docker Engine con il plugin Compose.",
+  "homepage": "https://github.com/MarcoMagno777/Gestore_Abbonamenti#readme",
+  "bugs": {
+    "url": "https://github.com/MarcoMagno777/Gestore_Abbonamenti/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarcoMagno777/Gestore_Abbonamenti.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
