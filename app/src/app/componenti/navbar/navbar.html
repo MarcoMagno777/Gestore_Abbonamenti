@@ -1,0 +1,91 @@
+<nav class="nav-container" [class.menu-open]="menuOpen">
+  <a class="logo" routerLink="/dashboard" (click)="closeMenu()">
+    <span class="logo-icon">S</span>
+    <span class="logo-text">
+      Sub<span>Manager</span>
+    </span>
+  </a>
+
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-label="Apri menu"
+    [attr.aria-expanded]="menuOpen"
+    (click)="menuOpen = !menuOpen"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="nav-content">
+    <ul class="nav-links">
+      <li>
+        <a
+          routerLink="/dashboard"
+          routerLinkActive="active-link"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="closeMenu()"
+        >
+          <span class="nav-icon">📊</span>
+          Home
+        </a>
+      </li>
+
+      <li>
+        <a
+          routerLink="/abbonamenti"
+          routerLinkActive="active-link"
+          (click)="closeMenu()"
+        >
+          <span class="nav-icon">🔁</span>
+         Miei Abbonamenti
+        </a>
+      </li>
+
+      <li>
+        <a
+          routerLink="/Profilo"
+          routerLinkActive="active-link"
+          (click)="closeMenu()"
+        >
+          <span class="nav-icon">👥</span>
+          Profilo
+        </a>
+      </li>
+
+      <li>
+        <a
+          routerLink="/pagamenti"
+          routerLinkActive="active-link"
+          (click)="closeMenu()"
+        >
+          <span class="nav-icon">💳</span>
+          Pagamenti
+        </a>
+      </li>
+
+      <li>
+        <a
+          routerLink="/Dettagli"
+          routerLinkActive="active-link"
+          (click)="closeMenu()"
+        >
+          <span class="nav-icon">📈</span>
+          Dettagli
+        </a>
+      </li>
+    </ul>
+
+    <div class="nav-actions">
+      <button class="notification-btn" type="button" aria-label="Notifiche">
+        🔔
+        <span class="notification-dot"></span>
+      </button>
+
+      <a class="cta-btn" routerLink="/abbonamenti/nuovo" (click)="closeMenu()">
+        + Nuovo abbonamento
+      </a>
+    </div>
+  </div>
+</nav>
