@@ -176,13 +176,15 @@ class AlunniController
   }
 
   public function updateSubscription(Request $request, Response $response, $args){
-    $host = getenv('DB_HOST') ?: 'db';
-    $database = getenv('DB_DATABASE') ?: 'scuola';
-    $username = getenv('DB_USERNAME') ?: 'scuola';
-    $password = getenv('DB_PASSWORD') ?: 'scuola';
+    $mysqli_connection = $this->DB();
+    $id = $args['idA'];
+    $idS = $args['idS'];
+    $data = $request->getParsedBody();
 
-    $mysqli_connection = new MySQLi($host, $username, $password, $database);
-    $result = $mysqli_connection->query("SELECT * FROM alunni");
+    $stmt = $mysqli_connection->prepare("UPDATE abbonamento SET nome = ?, descrizione = ?, data_sottoscrizione = ?, data_scadenza = ?, costo = ? WHERE id = ? AND id_account = ?");
+    $stmt->bind_param("ssddnii", $data['nome'], $data['descrizione'], $data['data_sottoscrizione'], $data['data_scadenza'], $data['costo'], $idS, $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
     $results = $result->fetch_all(MYSQLI_ASSOC);
 
     $response->getBody()->write(json_encode($results));
