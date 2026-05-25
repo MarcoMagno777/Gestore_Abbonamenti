@@ -9,13 +9,17 @@ require __DIR__ . '/controllers/AlunniController.php';
 
 $app = AppFactory::create();
 
+$app->addBodyParsingMiddleware();
+
 $app->get('/account/{idA}/subscriptions', "AccountController:index");
 $app->get('/account/{id}', "AccountController:account");
+$app->get('/account/{idA}/subscriptions', "AccountController:subscriptions");
 $app->get('/account/{idA}/subscriptions/{idS}', "AccountController:detailsSubscription");
 $app->post('/account/{idA}/subscriptions', "AccountController:addSubscription");
 $app->put('/account/{idA}/subscriptions/{idS}', "AccountController:updateSubscription");
 $app->delete('/account/{idA}/subscriptions/{idS}', "AccountController:deleteSubscription");
 $app->post('/login', "AccountController:login");
+$app->post('/register', "AccountController:register");
 $app->get('/admin/accounts', "AdminController:index");
 $app->delete('/admin/remove/{idA}', "AdminController:deleteAccount");
 $app->delete('/admin/remove', "AdminController:deleteAccounts");

@@ -37,7 +37,7 @@ class AdminController
     return $response->withHeader("Content-type", "application/json")->withStatus(200);
   }
 
-  public function login(Request $request, Response $response, $args){
+  public function deleteAccounts(Request $request, Response $response, $args){
     $host = getenv('DB_HOST') ?: 'db';
     $database = getenv('DB_DATABASE') ?: 'scuola';
     $username = getenv('DB_USERNAME') ?: 'scuola';
@@ -51,7 +51,7 @@ class AdminController
     return $response->withHeader("Content-type", "application/json")->withStatus(200);
   }
 
-  public function account(Request $request, Response $response, $args){
+  public function deleteAccount(Request $request, Response $response, $args){
     $host = getenv('DB_HOST') ?: 'db';
     $database = getenv('DB_DATABASE') ?: 'scuola';
     $username = getenv('DB_USERNAME') ?: 'scuola';
@@ -65,7 +65,7 @@ class AdminController
     return $response->withHeader("Content-type", "application/json")->withStatus(200);
   }
 
-  public function detailsSubscription(Request $request, Response $response, $args){
+  public function updatePassword(Request $request, Response $response, $args){
     $host = getenv('DB_HOST') ?: 'db';
     $database = getenv('DB_DATABASE') ?: 'scuola';
     $username = getenv('DB_USERNAME') ?: 'scuola';
