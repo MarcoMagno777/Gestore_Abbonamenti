@@ -18,3 +18,6 @@ CREATE TABLE `abbonamento` (
   PRIMARY KEY (`id`),
   FOREIGN KEY (`id_account`) REFERENCES `account`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `account` (username, email, password, tipo) 
+VALUES(`admin`,`lippi.filippo@itismeucci.com`,`pippo`,`admin`);
