@@ -145,13 +145,15 @@ class AlunniController
   }
 
   public function addSubscription(Request $request, Response $response, $args){
-    $host = getenv('DB_HOST') ?: 'db';
-    $database = getenv('DB_DATABASE') ?: 'scuola';
-    $username = getenv('DB_USERNAME') ?: 'scuola';
-    $password = getenv('DB_PASSWORD') ?: 'scuola';
+    $mysqli_connection = $this->DB();
+    $id = $args['idA'];
+    $data = $request->getParsedBody();
 
-    $mysqli_connection = new MySQLi($host, $username, $password, $database);
-    $result = $mysqli_connection->query("SELECT * FROM alunni");
+    $stmt = $mysqli_connection->prepare("INSERT INTO abbonamento (nome, descrizione, data_sottoscrizione, data_scadenza, costo, id_account)
+    VALUES ?, ?, ?, ?, ?, ?");
+    $stmt->bind_param("ssddni", $data['nome'], $data['descrizione'], $data['data_sottoscrizione'], $data['data_scadenza'], $data['costo'], $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
     $results = $result->fetch_all(MYSQLI_ASSOC);
 
     $response->getBody()->write(json_encode($results));
@@ -159,13 +161,14 @@ class AlunniController
   }
 
   public function deleteSubscription(Request $request, Response $response, $args){
-    $host = getenv('DB_HOST') ?: 'db';
-    $database = getenv('DB_DATABASE') ?: 'scuola';
-    $username = getenv('DB_USERNAME') ?: 'scuola';
-    $password = getenv('DB_PASSWORD') ?: 'scuola';
+    $mysqli_connection = $this->DB();
+    $id = $args['idA'];
+    $idS = $args['idS'];
 
-    $mysqli_connection = new MySQLi($host, $username, $password, $database);
-    $result = $mysqli_connection->query("SELECT * FROM alunni");
+    $stmt = $mysqli_connection->prepare("DELETE FROM abbonamento WHERE id = ? AND id_account = ?");
+    $stmt->bind_param("ii", $idS, $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
     $results = $result->fetch_all(MYSQLI_ASSOC);
 
     $response->getBody()->write(json_encode($results));
