@@ -156,6 +156,11 @@ class AlunniController
     $result = $stmt->get_result();
     $results = $result->fetch_all(MYSQLI_ASSOC);
 
+    if($result->num_rows == 0){
+      $response->getBody()->write(json_encode(["error" => "Errore durante l'aggiunta dell'abbonamento"]));
+      return $response->withHeader("Content-type", "application/json")->withStatus(400);
+    }
+
     $response->getBody()->write(json_encode($results));
     return $response->withHeader("Content-type", "application/json")->withStatus(200);
   }
@@ -170,6 +175,11 @@ class AlunniController
     $stmt->execute();
     $result = $stmt->get_result();
     $results = $result->fetch_all(MYSQLI_ASSOC);
+
+    if($result->num_rows == 0) {
+      $response->getBody()->write(json_encode(["error" => "Abbonamento non trovato"]));
+      return $response->withHeader("Content-type", "application/json")->withStatus(404);
+    }
 
     $response->getBody()->write(json_encode($results));
     return $response->withHeader("Content-type", "application/json")->withStatus(200);
@@ -186,6 +196,11 @@ class AlunniController
     $stmt->execute();
     $result = $stmt->get_result();
     $results = $result->fetch_all(MYSQLI_ASSOC);
+
+    if($result->num_rows == 0){
+      $response->getBody()->write(json_encode(["error" => "Abbonamento non trovato"]));
+      return $response->withHeader("Content-type", "application/json")->withStatus(404);
+    }
 
     $response->getBody()->write(json_encode($results));
     return $response->withHeader("Content-type", "application/json")->withStatus(200);
