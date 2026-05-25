@@ -16,5 +16,10 @@ $app->post('/account/{idA}/subscriptions', "AccountController:addSubscription");
 $app->put('/account/{idA}/subscriptions/{idS}', "AccountController:updateSubscription");
 $app->delete('/account/{idA}/subscriptions/{idS}', "AccountController:deleteSubscription");
 $app->post('/login', "AccountController:login");
+$app->get('/admin/accounts', "AdminController:index");
+$app->delete('/admin/remove/{idA}', "AdminController:deleteAccount");
+$app->delete('/admin/remove', "AdminController:deleteAccounts");
+$app->put('/admin/update/{idA}', "AdminController:updatePassword");
+
 
 $app->run();
