@@ -5,7 +5,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 require __DIR__ . '/vendor/autoload.php';
-require __DIR__ . '/controllers/AlunniController.php';
+require __DIR__ . '/controllers/AccountController.php';
+require __DIR__ . '/controllers/AdminController.php';
 
 $app = AppFactory::create();
 
@@ -13,7 +14,6 @@ $app->addBodyParsingMiddleware();
 
 $app->get('/account/{idA}/subscriptions', "AccountController:index");
 $app->get('/account/{id}', "AccountController:account");
-$app->get('/account/{idA}/subscriptions', "AccountController:subscriptions");
 $app->get('/account/{idA}/subscriptions/{idS}', "AccountController:detailsSubscription");
 $app->post('/account/{idA}/subscriptions', "AccountController:addSubscription");
 $app->put('/account/{idA}/subscriptions/{idS}', "AccountController:updateSubscription");

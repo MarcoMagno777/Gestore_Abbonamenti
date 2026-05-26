@@ -2,7 +2,7 @@
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class AlunniController
+class AccountController
 {
 
   private function DB(){
@@ -24,8 +24,8 @@ class AlunniController
     $stmt = $mysqli_connection->prepare(
       "SELECT * 
        FROM abbonamento a 
-       JOIN account aa ON a.id = aa.id_account 
-       WHERE a.id = ?"
+       JOIN account aa ON aa.id = a.id_account 
+       WHERE aa.id = ?"
     );
 
     $stmt->bind_param("i", $idA);
@@ -108,21 +108,6 @@ class AlunniController
     $stmt->execute();
     $result = $stmt->get_result();
     $results = $result->fetch_all(MYSQLI_ASSOC);
-
-    $response->getBody()->write(json_encode($results));
-    return $response->withHeader("Content-type", "application/json")->withStatus(200);
-  }
-
-  public function subscriptions(Request $request, Response $response, $args){
-    $mysqli_connection = $this->DB();
-    $id = $args['idA'];
-
-    $stmt = $mysqli_connection->prepare("SELECT * FROM abbonamento a JOIN account aa ON aa.id = a.id_account WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $results = $result->fetch_all(MYSQLI_ASSOC);
-
 
     $response->getBody()->write(json_encode($results));
     return $response->withHeader("Content-type", "application/json")->withStatus(200);
