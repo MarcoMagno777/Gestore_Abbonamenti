@@ -21,9 +21,10 @@ class AdminController
 
     $stmt = $mysqli_connection->prepare(
       "SELECT * 
-       FROM account a"
+       FROM account a WHERE a.tipo = ?"
     );
 
+    $stmt->bind_param("s", "user");
     $stmt->execute();
     $result = $stmt->get_result();
     $results = $result->fetch_all(MYSQLI_ASSOC);
