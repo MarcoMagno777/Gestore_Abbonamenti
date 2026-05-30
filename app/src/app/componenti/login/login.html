@@ -1,15 +1,89 @@
 <div class="login-container">
-  <h2>Accedi al Sistema</h2>
-  <p>Seleziona la modalità di accesso per testare le rotte:</p>
-  
-  <div class="button-group">
-    <button (click)="loginAs('USER')" class="user-btn">
-      Accedi come Utente Standard
-    </button>
-    
-    <button (click)="loginAs('ADMIN')" class="admin-btn">
-      Accedi come Amministratore
-    </button>
-  </div>
-</div>
+  <h2>{{ mode === 'login' ? 'Accedi' : 'Registrati' }}</h2>
+  <p class="subtitle">
+    {{ mode === 'login' ? 'Inserisci le tue credenziali per accedere.' : 'Crea un nuovo account utente.' }}
+  </p>
 
+  @if (errorMessage) {
+    <p class="message error">{{ errorMessage }}</p>
+  }
+  @if (successMessage) {
+    <p class="message success">{{ successMessage }}</p>
+  }
+
+  @if (mode === 'login') {
+    <form (ngSubmit)="login()" class="auth-form">
+      <label>
+        Username
+        <input
+          type="text"
+          name="username"
+          [(ngModel)]="loginForm.username"
+          autocomplete="username"
+          required
+        />
+      </label>
+
+      <label>
+        Password
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="loginForm.password"
+          autocomplete="current-password"
+          required
+        />
+      </label>
+
+      <label class="remember-row">
+        <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe" />
+        Ricordami
+      </label>
+
+      <button type="submit" class="primary-btn" [disabled]="loading">Accedi</button>
+    </form>
+  } @else {
+    <form (ngSubmit)="register()" class="auth-form">
+      <label>
+        Username
+        <input
+          type="text"
+          name="regUsername"
+          [(ngModel)]="registerForm.username"
+          autocomplete="username"
+          required
+        />
+      </label>
+
+      <label>
+        Email
+        <input
+          type="email"
+          name="email"
+          [(ngModel)]="registerForm.email"
+          autocomplete="email"
+          required
+        />
+      </label>
+
+      <label>
+        Password
+        <input
+          type="password"
+          name="regPassword"
+          [(ngModel)]="registerForm.password"
+          autocomplete="new-password"
+          required
+        />
+      </label>
+
+      <button type="submit" class="primary-btn" [disabled]="loading">Registrati</button>
+    </form>
+  }
+
+  <button type="button" class="link-btn" (click)="toggleMode()">
+    {{ mode === 'login' ? 'Non hai un account? Registrati' : 'Hai già un account? Accedi' }}
+  </button>
+
+  <p class="hint">Account demo: admin / admin123</p>
+</div>

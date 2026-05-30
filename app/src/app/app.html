@@ -1,1 +1,4 @@
-<app-navbar></app-navbar>
+@if (auth.isAuthenticated()) {
+  <app-navbar />
+}
+<router-outlet />

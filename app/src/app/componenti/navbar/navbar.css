@@ -374,6 +374,27 @@
     width: 100%;
     border-radius: 16px;
   }
+
+  .logout-btn {
+    width: 100%;
+    border-radius: 16px;
+  }
+}
+
+.logout-btn {
+  padding: 10px 16px;
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  border-radius: 999px;
+  background: rgba(127, 29, 29, 0.35);
+  color: #fecaca;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.logout-btn:hover {
+  background: rgba(185, 28, 28, 0.55);
+  border-color: rgba(252, 165, 165, 0.8);
 }
 
 @media (max-width: 520px) {

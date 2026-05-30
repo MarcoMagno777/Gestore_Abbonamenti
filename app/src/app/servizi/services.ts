@@ -27,9 +27,9 @@ export class AuthService {
         email: 'admin@submanager.local',
         password: 'admin123',
         role: 'ADMIN',
-        name: 'Amministratore'
-      }
-    ]
+        name: 'Amministratore',
+      },
+    ],
   ]);
 
   public isAuthenticated = computed(() => this.user() !== null);
@@ -42,17 +42,18 @@ export class AuthService {
   }
 
   login(username: string, password: string): Observable<boolean> {
-    const stored = this.users.get(username.toLowerCase());
+    const normalized = username.toLowerCase();
+    const stored = this.users.get(normalized);
     const success = stored?.password === password;
 
     return of(success).pipe(
-      delay(600),
+      delay(300),
       tap((result) => {
         if (result && stored) {
           const nextUser: User = {
-            id: username,
+            id: normalized,
             role: stored.role,
-            name: stored.name
+            name: stored.name,
           };
           this.user.set(nextUser);
           this.persistUser(nextUser);
@@ -65,29 +66,20 @@ export class AuthService {
     const normalized = username.toLowerCase();
 
     if (this.users.has(normalized)) {
-      return of(false).pipe(delay(600));
+      return of(false).pipe(delay(300));
     }
 
     const newUser: RegisteredUser = {
       email,
       password,
       role: 'USER',
-      name: username
+      name: username,
     };
 
     this.users.set(normalized, newUser);
     this.persistUsers();
 
-    const nextUser: User = {
-      id: normalized,
-      role: newUser.role,
-      name: newUser.name
-    };
-
-    this.user.set(nextUser);
-    this.persistUser(nextUser);
-
-    return of(true).pipe(delay(600));
+    return of(true).pipe(delay(300));
   }
 
   logout(): void {
@@ -100,8 +92,7 @@ export class AuthService {
       const raw = localStorage.getItem(AuthService.STORAGE_USER_KEY);
       if (!raw) return;
       const parsed = JSON.parse(raw) as User | null;
-      if (!parsed) return;
-      if (!parsed.id || !parsed.role || !parsed.name) return;
+      if (!parsed?.id || !parsed?.role || !parsed?.name) return;
       this.user.set(parsed);
     } catch {
       // ignore corrupted storage
@@ -118,13 +109,8 @@ export class AuthService {
         if (!Array.isArray(entry) || entry.length !== 2) continue;
         const [key, value] = entry;
         if (!key || !value?.password || !value?.email || !value?.role || !value?.name) continue;
-        if (key.toLowerCase() === 'admin') continue; // keep built-in admin
-        this.users.set(String(key).toLowerCase(), {
-          email: value.email,
-          password: value.password,
-          role: value.role,
-          name: value.name,
-        });
+        if (key.toLowerCase() === 'admin') continue;
+        this.users.set(String(key).toLowerCase(), value);
       }
     } catch {
       // ignore corrupted storage
@@ -139,7 +125,7 @@ export class AuthService {
         localStorage.removeItem(AuthService.STORAGE_USER_KEY);
       }
     } catch {
-      // ignore storage failures (private mode, quota, etc.)
+      // ignore storage failures
     }
   }
 
