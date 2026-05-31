@@ -1,37 +1,36 @@
 <?php
+
 use Slim\Factory\AppFactory;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 require __DIR__ . '/vendor/autoload.php';
-require __DIR__ . '/controllers/AlunniController.php';
+require __DIR__ . '/controllers/AccountController.php';
+require __DIR__ . '/controllers/AdminController.php';
 
 $app = AppFactory::create();
 
-$app->get('/test', function (Request $request, Response $response, array $args) {
-    $response->getBody()->write("Test page");
-    return $response;
-});
+$app->setBasePath("");
 
-$app->get('/up', function (Request $request, Response $response, array $args) {
-    $response->getBody()->write("OK");
-    return $response;
-});
+$app->addRoutingMiddleware();
+$app->addBodyParsingMiddleware();
+$app->addErrorMiddleware(true, true, true);
 
-$app->get('/', function (Request $request, Response $response, array $args) {
-    $payload = json_encode(['status' => 'ok']);
-    $response->getBody()->write($payload);
-    return $response->withHeader("Content-type", "application/json");
-});
+// ROUTES
+$app->get('/account/{idA}/subscriptions', "AccountController:index");
+$app->get('/account/{id}', "AccountController:account");
+$app->get('/account/{idA}/subscriptions/{idS}', "AccountController:detailsSubscription");
+$app->post('/account/{idA}/subscriptions', "AccountController:addSubscription");
+$app->put('/account/{idA}/subscriptions/{idS}', "AccountController:updateSubscription");
+$app->delete('/account/{idA}/subscriptions/{idS}', "AccountController:deleteSubscription");
 
-$app->get('/hello/{name}', function (Request $request, Response $response, array $args) {
-    $name = $args['name'];
-    $response->getBody()->write("Hello, $name");
-    return $response;
-});
+$app->post('/login', "AccountController:login");
+$app->post('/register', "AccountController:register");
 
-$app->get('/alunni', "AlunniController:index");
-$app->get('/api/alunni', "AlunniController:index");
+$app->get('/admin/accounts', "AdminController:index");
+$app->delete('/admin/remove/{idA}', "AdminController:deleteAccount");
+$app->delete('/admin/remove', "AdminController:deleteAccounts");
+$app->put('/admin/update/{idA}', "AdminController:updatePassword");
 
 $app->run();
