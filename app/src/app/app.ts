@@ -1,14 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Navbar } from './componenti/navbar/navbar';
-import { AuthService } from './servizi/services';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Navbar],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
-  styleUrl: './app.css',
+  styleUrls: ['./app.css']
 })
 export class App {
-  protected readonly auth = inject(AuthService);
+  protected readonly title = signal('app');
 }
