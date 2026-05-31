@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 cd /var/www/html
 
-if [ -f composer.json ] && [ ! -d vendor ]; then
+if [ ! -f vendor/autoload.php ]; then
   composer install
 fi
 
