@@ -1,4 +1,5 @@
 <?php
+
 use Slim\Factory\AppFactory;
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -10,8 +11,13 @@ require __DIR__ . '/controllers/AdminController.php';
 
 $app = AppFactory::create();
 
-$app->addBodyParsingMiddleware();
+$app->setBasePath("");
 
+$app->addRoutingMiddleware();
+$app->addBodyParsingMiddleware();
+$app->addErrorMiddleware(true, true, true);
+
+// ROUTES
 $app->get('/account/{idA}/subscriptions', "AccountController:index");
 $app->get('/account/{id}', "AccountController:account");
 $app->get('/account/{idA}/subscriptions/{idS}', "AccountController:detailsSubscription");
@@ -26,6 +32,5 @@ $app->get('/admin/accounts', "AdminController:index");
 $app->delete('/admin/remove/{idA}', "AdminController:deleteAccount");
 $app->delete('/admin/remove', "AdminController:deleteAccounts");
 $app->put('/admin/update/{idA}', "AdminController:updatePassword");
-
 
 $app->run();

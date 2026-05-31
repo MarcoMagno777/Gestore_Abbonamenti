@@ -1,10 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
 cd /app
 
-if [ ! -x node_modules/.bin/vite ] && [ ! -d node_modules ]; then
-  npm install --no-package-lock
-fi
+npm install
 
-exec npm run start -- --host 0.0.0.0
+exec npx ng serve --host 0.0.0.0 --port 4200

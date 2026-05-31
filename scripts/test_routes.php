@@ -66,12 +66,12 @@ $idA = 1;
 $idS = 1;
 
 $tests = [
+  // ===== AccountController Tests =====
   ['GET', "/account/{$idA}/subscriptions", null],
   ['GET', "/account/{$idA}/subscriptions/{$idS}", null],
   ['GET', "/account/{$idA}", null],
   ['POST', '/register', ['username' => 'testuser', 'email' => 'test@example.com', 'password' => 'secret123']],
   ['POST', '/login', ['username' => 'testuser', 'password' => 'secret123']],
-  ['GET', '/admin/accounts', null],
   ['POST', "/account/{$idA}/subscriptions", [
     'nome' => 'Prova',
     'descrizione' => 'Abbonamento di prova',
@@ -87,7 +87,12 @@ $tests = [
     'costo' => '19.99'
   ]],
   ['DELETE', "/account/{$idA}/subscriptions/{$idS}", null],
+  
+  // ===== AdminController Tests =====
+  ['GET', '/admin/accounts', null],
+  ['PUT', "/admin/update/{$idA}", ['password' => 'newpassword123']],
   ['DELETE', "/admin/remove/{$idA}", null],
+  ['DELETE', '/admin/remove', null],
 ];
 
 echo "Base URL: {$base}\n";
