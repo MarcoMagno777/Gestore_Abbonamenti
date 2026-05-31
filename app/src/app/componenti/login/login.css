@@ -1,0 +1,206 @@
+.login-shell {
+  min-height: calc(100vh - 60px);
+  display: grid;
+  place-items: center;
+  padding: 48px 24px;
+  background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.18), transparent 25%),
+    radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.12), transparent 18%),
+    linear-gradient(180deg, #0f172a 0%, #020617 100%);
+  animation: fadeIn 0.9s ease-out both;
+}
+
+.login-panel {
+  width: min(560px, 100%);
+  padding: 40px;
+  border-radius: 36px;
+  position: relative;
+  background: rgba(15, 23, 42, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 38px 105px rgba(15, 23, 42, 0.5);
+  animation: popIn 0.8s ease-out 0.1s forwards;
+}
+
+.login-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 36px;
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.08), rgba(139, 92, 246, 0.08));
+  pointer-events: none;
+  z-index: -1;
+}
+
+.brand-block {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.brand-badge {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #2563eb, #8b5cf6);
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 800;
+  animation: pulse 2.8s ease-in-out infinite;
+}
+
+.brand-block h1 {
+  margin: 0;
+  font-size: clamp(2rem, 2.5vw, 2.6rem);
+  color: #f8fafc;
+}
+
+.brand-block p {
+  margin: 0;
+  color: #cbd5e1;
+  line-height: 1.7;
+}
+
+.tab-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 24px;
+  animation: fadeInUp 0.8s ease-out 0.15s both;
+}
+
+.tab {
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 14px 18px;
+  border-radius: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.tab.active {
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(139, 92, 246, 0.2));
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.form-card {
+  display: grid;
+  gap: 20px;
+  animation: fadeInUp 0.9s ease-out 0.2s both;
+}
+
+.subtitle {
+  margin: 0;
+  color: #94a3b8;
+  line-height: 1.7;
+}
+
+.welcome-banner {
+  padding: 18px 22px;
+  border-radius: 24px;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.18);
+  color: #e0f2fe;
+  display: grid;
+  gap: 6px;
+  margin-bottom: 24px;
+  animation: fadeIn 1s ease-out 0.1s both;
+}
+
+.welcome-banner span {
+  display: inline-flex;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #7dd3fc;
+}
+
+.welcome-banner p {
+  margin: 0;
+  color: #cbd5e1;
+  line-height: 1.7;
+}
+
+label {
+  display: grid;
+  gap: 10px;
+  color: #e2e8f0;
+  font-weight: 600;
+}
+
+input {
+  width: 100%;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 16px;
+  padding: 14px 18px;
+  background: rgba(15, 23, 42, 0.78);
+  color: #f8fafc;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+input:hover {
+  transform: translateY(-1px);
+}
+
+input:focus {
+  border-color: rgba(59, 130, 246, 0.75);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.14);
+}
+
+.primary-btn {
+  width: 100%;
+  padding: 16px 18px;
+  margin-top: 4px;
+  border: none;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 35px rgba(37, 99, 235, 0.28);
+}
+
+.alert {
+  padding: 16px 18px;
+  border-radius: 18px;
+  font-size: 0.95rem;
+}
+
+.alert-error {
+  background: rgba(220, 38, 38, 0.14);
+  color: #fecdd3;
+  border: 1px solid rgba(248, 113, 113, 0.2);
+}
+
+.alert-success {
+  background: rgba(34, 197, 94, 0.14);
+  color: #bbf7d0;
+  border: 1px solid rgba(34, 197, 94, 0.24);
+}
+
+@media (max-width: 640px) {
+  .login-panel {
+    padding: 28px 20px;
+    border-radius: 24px;
+  }
+
+  .brand-block {
+    grid-template-columns: 1fr;
+  }
+
+  .tab-switch {
+    grid-template-columns: 1fr;
+  }
+}

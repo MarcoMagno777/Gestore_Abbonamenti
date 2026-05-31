@@ -1,0 +1,21 @@
+{
+    "name": "gestore/abbonamenti-api",
+    "description": "API for subscription management",
+    "type": "project",
+    "require": {
+        "php": ">=8.0",
+        "slim/slim": "^4.0",
+        "slim/psr7": "^1.6"
+    },
+    "require-dev": {
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/",
+            "App\\Controllers\\": "controllers/"
+        }
+    },
+    "scripts": {
+        "start": "php -S localhost:8000 -t public"
+    }
+}

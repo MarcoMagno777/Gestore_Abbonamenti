@@ -5,7 +5,12 @@
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
     "types": [
-      "vitest/globals"
+      "vitest/globals",
+      "node"
+    ],
+    "lib": [
+      "ES2022",
+      "dom"
     ]
   },
   "include": [

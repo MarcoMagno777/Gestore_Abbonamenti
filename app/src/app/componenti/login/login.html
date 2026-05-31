@@ -1,0 +1,68 @@
+<div class="login-shell">
+  <section class="login-panel">
+    <div class="brand-block">
+      <span class="brand-badge">S</span>
+      <div>
+        <h1>SubManager</h1>
+        <p>Accedi o registrati per gestire abbonamenti con un design moderno.</p>
+      </div>
+    </div>
+
+    <div class="welcome-banner">
+      <span>Benvenuto!</span>
+      <p>Gestisci abbonamenti, pagamenti e profilo con un’esperienza fluida e animata.</p>
+    </div>
+
+    <div class="tab-switch">
+      <button type="button" class="tab" [class.active]="mode === 'login'" (click)="mode = 'login'; clearMessages()">
+        Login
+      </button>
+      <button type="button" class="tab" [class.active]="mode === 'register'" (click)="mode = 'register'; clearMessages()">
+        Registrazione
+      </button>
+    </div>
+
+    <div class="form-card">
+      <p class="subtitle">Accedi con username e password. Per amministratore usa <strong>admin</strong> / <strong>admin123</strong>.</p>
+
+      <div *ngIf="errorMessage" class="alert alert-error">{{ errorMessage }}</div>
+      <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+
+      <form *ngIf="mode === 'login'; else registerFormTemplate" (ngSubmit)="login()">
+        <label>
+          Username
+          <input type="text" name="username" [(ngModel)]="loginForm.username" placeholder="Inserisci username" />
+        </label>
+
+        <label>
+          Password
+          <input type="password" name="password" [(ngModel)]="loginForm.password" placeholder="Inserisci password" />
+        </label>
+
+        <button type="submit" class="primary-btn">Accedi</button>
+      </form>
+
+      <ng-template #registerFormTemplate>
+        <form (ngSubmit)="register()">
+          <label>
+            Username
+            <input type="text" name="username" [(ngModel)]="registerForm.username" placeholder="Scegli un username" />
+          </label>
+
+          <label>
+            Email
+            <input type="email" name="email" [(ngModel)]="registerForm.email" placeholder="Inserisci la tua email" />
+          </label>
+
+          <label>
+            Password
+            <input type="password" name="password" [(ngModel)]="registerForm.password" placeholder="Crea una password" />
+          </label>
+
+          <button type="submit" class="primary-btn">Registrati</button>
+        </form>
+      </ng-template>
+    </div>
+  </section>
+</div>
+

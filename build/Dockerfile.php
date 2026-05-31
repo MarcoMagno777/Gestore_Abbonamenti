@@ -7,8 +7,18 @@ RUN apt-get update \
     && a2enmod rewrite headers
 
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
-COPY entrypoint-php.sh /entrypoint-php.sh
-RUN chmod +x /entrypoint-php.sh
+
+WORKDIR /var/www/html
 
 EXPOSE 80
-CMD ["/entrypoint-php.sh"]
+
+RUN echo '#!/bin/bash\n\
+set -e\n\
+\n\
+if [ ! -f vendor/autoload.php ]; then\n\
+  composer install\n\
+fi\n\
+\n\
+exec apache2-foreground' > /entrypoint.sh && chmod +x /entrypoint.sh
+
+CMD ["/bin/bash", "/entrypoint.sh"]
