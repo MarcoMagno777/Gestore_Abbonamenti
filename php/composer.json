@@ -1,0 +1,15 @@
+{
+    "name": "pc/php",
+    "autoload": {
+        "psr-4": {
+            "Pc\\Php\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "lapomazzei",
+            "email": "mazzei.lapo@itismeucci.com"
+        }
+    ],
+    "require": {}
+}

@@ -38,7 +38,7 @@ services:
       context: ./build
       dockerfile: Dockerfile.node
     ports:
-      - ${FRONTEND_PORT:-5173}:5173
+      - ${FRONTEND_PORT:-4200}:4200
     volumes:
       - ./app:/app
       - node_modules:/app/node_modules
