@@ -6,7 +6,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/controllers/BaseController.php';
-require __DIR__ . '/controllers/AlunniController.php';
 require __DIR__ . '/controllers/AuthController.php';
 require __DIR__ . '/controllers/AbbonamentiController.php';
 require __DIR__ . '/controllers/AccountController.php';
@@ -81,9 +80,6 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
     $response->getBody()->write("Hello, $name");
     return $response;
 });
-
-$app->get('/alunni', "AlunniController:index");
-$app->get('/api/alunni', "AlunniController:index");
 
 $app->options('/{routes:.+}', function (Request $request, Response $response) {
     return $response;
