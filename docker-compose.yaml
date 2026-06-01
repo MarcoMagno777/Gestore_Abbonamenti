@@ -26,7 +26,7 @@ services:
       MARIADB_PASSWORD: ${DB_PASSWORD:-scuola}
     volumes:
       - mariadb_data:/var/lib/mysql
-      - ./build/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./build/init.sql:/docker-entrypoint-initdb.d/01-init.sql
     healthcheck:
       test: ["CMD-SHELL", "mariadb-admin ping -h localhost -u$${MARIADB_USER} -p$${MARIADB_PASSWORD} --silent"]
       interval: 5s
