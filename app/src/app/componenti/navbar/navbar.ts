@@ -17,6 +17,7 @@ export class Navbar {
 
   readonly currentUser = this.authService.currentUser;
   readonly isAuthenticated = this.authService.isAuthenticated;
+  readonly isAdmin = this.authService.isAdmin;
 
   closeMenu(): void {
     this.menuOpen = false;
@@ -28,4 +29,3 @@ export class Navbar {
     this.router.navigate(['/login']);
   }
 }
-

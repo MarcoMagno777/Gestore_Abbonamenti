@@ -1,0 +1,103 @@
+<section class="workspace">
+  <header class="workspace-header">
+    <div>
+      <span class="eyebrow">Admin</span>
+      <h1>Pannello amministratore</h1>
+      <p>Accesso riservato a {{ currentUser()?.name }} tramite credenziali admin.</p>
+    </div>
+  </header>
+
+  <p *ngIf="loading" class="state">Caricamento dati admin...</p>
+  <p *ngIf="errorMessage" class="state error">{{ errorMessage }}</p>
+  <p *ngIf="successMessage" class="state success">{{ successMessage }}</p>
+
+  <div class="admin-grid" *ngIf="!loading">
+    <article>
+      <div class="section-title">
+        <h2>Utenti registrati</h2>
+        <span>{{ usersCount }}</span>
+      </div>
+
+      <div class="admin-actions">
+        <label>
+          Utente
+          <select name="selectedAccountId" [(ngModel)]="selectedAccountId">
+            <option *ngFor="let account of deletableAccounts" [ngValue]="account.id">
+              {{ account.username }} - {{ account.email }}
+            </option>
+          </select>
+        </label>
+
+        <button type="button" [disabled]="!selectedAccountId" (click)="deleteSelectedAccount()">Cancella utente</button>
+        <button type="button" [disabled]="!selectedAccountId" (click)="resetSelectedPassword()">Reset password</button>
+        <button type="button" [disabled]="!deletableAccounts.length" (click)="deleteAllUsers()">Cancella tutti</button>
+      </div>
+    </article>
+
+    <article>
+      <div class="section-title">
+        <h2>Account</h2>
+        <span>{{ accounts.length }}</span>
+      </div>
+
+      <div class="table-shell" *ngIf="accounts.length; else emptyAccounts">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Ruolo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let account of accounts">
+              <td>{{ account.id }}</td>
+              <td>{{ account.username }}</td>
+              <td>{{ account.email }}</td>
+              <td>{{ account.role }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ng-template #emptyAccounts>
+        <p class="empty-state">Nessun account disponibile.</p>
+      </ng-template>
+    </article>
+
+    <article>
+      <div class="section-title">
+        <h2>Abbonamenti</h2>
+        <span>{{ abbonamenti.length }}</span>
+      </div>
+
+      <div class="table-shell" *ngIf="abbonamenti.length; else emptyAbbonamenti">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Account</th>
+              <th>Costo</th>
+              <th>Scadenza</th>
+              <th>Azioni</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let abbonamento of abbonamenti">
+              <td>{{ abbonamento.nome }}</td>
+              <td>{{ abbonamento.id_account }}</td>
+              <td>{{ abbonamento.costo | currency:'EUR':'symbol':'1.2-2' }}</td>
+              <td>{{ abbonamento.data_scadenza | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <button type="button" (click)="deleteAbbonamento(abbonamento)">Elimina</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ng-template #emptyAbbonamenti>
+        <p class="empty-state">Nessun abbonamento disponibile.</p>
+      </ng-template>
+    </article>
+  </div>
+</section>

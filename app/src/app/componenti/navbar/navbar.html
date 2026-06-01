@@ -54,35 +54,19 @@
         </a>
       </li>
 
-      <li>
+      <li *ngIf="isAdmin()">
         <a
-          routerLink="/pagamenti"
+          routerLink="/admin"
           routerLinkActive="active-link"
           (click)="closeMenu()"
         >
-          <span class="nav-icon">💳</span>
-          Pagamenti
-        </a>
-      </li>
-
-      <li>
-        <a
-          routerLink="/dettagli"
-          routerLinkActive="active-link"
-          (click)="closeMenu()"
-        >
-          <span class="nav-icon">📈</span>
-          Dettagli
+          <span class="nav-icon">⚙️</span>
+          Admin
         </a>
       </li>
     </ul>
 
     <div class="nav-actions">
-      <button class="notification-btn" type="button" aria-label="Notifiche">
-        🔔
-        <span class="notification-dot"></span>
-      </button>
-
       <a class="cta-btn" routerLink="/abbonamenti/nuovo" (click)="closeMenu()">
         + Nuovo abbonamento
       </a>

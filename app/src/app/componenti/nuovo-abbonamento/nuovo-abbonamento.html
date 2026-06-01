@@ -1,0 +1,38 @@
+<section class="workspace">
+  <header>
+    <span class="eyebrow">Nuovo abbonamento</span>
+    <h1>Aggiungi abbonamento</h1>
+    <p>Il form invia i dati al backend tramite il servizio Angular.</p>
+  </header>
+
+  <p *ngIf="errorMessage" class="state error">{{ errorMessage }}</p>
+
+  <form class="subscription-form" (ngSubmit)="saveSubscription()">
+    <label>
+      Nome
+      <input type="text" name="nome" [(ngModel)]="form.nome" placeholder="Netflix, Spotify..." />
+    </label>
+
+    <label>
+      Descrizione
+      <input type="text" name="descrizione" [(ngModel)]="form.descrizione" placeholder="Streaming, musica..." />
+    </label>
+
+    <label>
+      Data sottoscrizione
+      <input type="date" name="data_sottoscrizione" [(ngModel)]="form.data_sottoscrizione" />
+    </label>
+
+    <label>
+      Data scadenza
+      <input type="date" name="data_scadenza" [(ngModel)]="form.data_scadenza" />
+    </label>
+
+    <label>
+      Costo
+      <input type="number" name="costo" min="0" step="0.01" [(ngModel)]="form.costo" />
+    </label>
+
+    <button type="submit" [disabled]="saving">{{ saving ? 'Creazione...' : 'Crea abbonamento' }}</button>
+  </form>
+</section>

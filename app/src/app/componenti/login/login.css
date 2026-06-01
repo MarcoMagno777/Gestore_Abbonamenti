@@ -153,6 +153,19 @@ input:focus {
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.14);
 }
 
+.remember-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #cbd5e1;
+}
+
+.remember-row input {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+}
+
 .primary-btn {
   width: 100%;
   padding: 16px 18px;

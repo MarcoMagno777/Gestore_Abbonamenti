@@ -1,0 +1,42 @@
+<section class="workspace">
+  <header class="workspace-header">
+    <div>
+      <span class="eyebrow">Miei abbonamenti</span>
+      <h1>Abbonamenti</h1>
+      <p>Consulta, metti in pausa o rimuovi gli abbonamenti salvati sul backend.</p>
+    </div>
+    <a class="primary-action" routerLink="/abbonamenti/nuovo">+ Nuovo</a>
+  </header>
+
+  <p *ngIf="loading" class="state">Caricamento abbonamenti...</p>
+  <p *ngIf="errorMessage" class="state error">{{ errorMessage }}</p>
+
+  <div class="table-shell" *ngIf="!loading && subscriptions.length">
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Descrizione</th>
+          <th>Costo</th>
+          <th>Sottoscrizione</th>
+          <th>Scadenza</th>
+          <th>Azioni</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let subscription of subscriptions">
+          <td>{{ subscription.nome }}</td>
+          <td>{{ subscription.descrizione || '-' }}</td>
+          <td>{{ subscription.costo | currency:'EUR':'symbol':'1.2-2' }}</td>
+          <td>{{ subscription.data_sottoscrizione | date:'dd/MM/yyyy' }}</td>
+          <td>{{ subscription.data_scadenza | date:'dd/MM/yyyy' }}</td>
+          <td class="actions">
+            <button class="danger" type="button" (click)="deleteSubscription(subscription)">Elimina</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p *ngIf="!loading && !subscriptions.length && !errorMessage" class="state">Nessun abbonamento presente.</p>
+</section>

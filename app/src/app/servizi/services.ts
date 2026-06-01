@@ -1,154 +1,187 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { Observable, of, delay, tap } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { Observable, of, tap, catchError, throwError, map } from 'rxjs';
 
 export interface User {
   id: string;
+  accountId?: number;
   role: 'USER' | 'ADMIN';
   name: string;
-}
-
-interface RegisteredUser {
-  email: string;
-  password: string;
-  role: 'USER' | 'ADMIN';
-  name: string;
+  email?: string;
 }
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private static readonly STORAGE_USER_KEY = 'submanager.currentUser.v1';
-  private static readonly STORAGE_USERS_KEY = 'submanager.registeredUsers.v1';
+  private static readonly REMEMBER_USERNAME_KEY = 'submanager.rememberedUsername.v1';
 
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = 'http://localhost:8080/api';
   private user = signal<User | null>(null);
-  private users = new Map<string, RegisteredUser>([
-    [
-      'admin',
-      {
-        email: 'admin@submanager.local',
-        password: 'admin123',
-        role: 'ADMIN',
-        name: 'Amministratore'
-      }
-    ]
-  ]);
 
   public isAuthenticated = computed(() => this.user() !== null);
   public isAdmin = computed(() => this.user()?.role === 'ADMIN');
   public currentUser = this.user.asReadonly();
+  public currentAccountId = computed(() => {
+    const current = this.user();
+    if (!current) return null;
+    return current.accountId ?? Number(current.id);
+  });
 
-  constructor() {
-    this.hydrateUsers();
-    this.hydrateUser();
-  }
-
-  login(username: string, password: string): Observable<boolean> {
-    const stored = this.users.get(username.toLowerCase());
-    const success = stored?.password === password;
-
-    return of(success).pipe(
-      delay(600),
-      tap((result) => {
-        if (result && stored) {
-          const nextUser: User = {
-            id: username,
-            role: stored.role,
-            name: stored.name
-          };
-          this.user.set(nextUser);
-          this.persistUser(nextUser);
-        }
+  login(username: string, password: string, rememberUsername: boolean): Observable<boolean> {
+    return this.http.post<User>(`${this.apiUrl}/auth/login`, { username, password }, { withCredentials: true }).pipe(
+      tap((user) => {
+        this.user.set(user);
+        this.persistRememberedUsername(rememberUsername ? username : '');
+      }),
+      map(() => true),
+      catchError((error) => {
+        this.user.set(null);
+        return error.status === 401 ? of(false) : throwError(() => error);
       })
     );
   }
 
   register(username: string, email: string, password: string): Observable<boolean> {
-    const normalized = username.toLowerCase();
-
-    if (this.users.has(normalized)) {
-      return of(false).pipe(delay(600));
-    }
-
-    const newUser: RegisteredUser = {
-      email,
-      password,
-      role: 'USER',
-      name: username
-    };
-
-    this.users.set(normalized, newUser);
-    this.persistUsers();
-
-    const nextUser: User = {
-      id: normalized,
-      role: newUser.role,
-      name: newUser.name
-    };
-
-    this.user.set(nextUser);
-    this.persistUser(nextUser);
-
-    return of(true).pipe(delay(600));
+    return this.http.post<User>(`${this.apiUrl}/auth/register`, { username, email, password }, { withCredentials: true }).pipe(
+      tap((user) => this.user.set(user)),
+      map(() => true),
+      catchError((error) => error.status === 409 ? of(false) : throwError(() => error))
+    );
   }
 
   logout(): void {
-    this.user.set(null);
-    this.persistUser(null);
+    this.http.post(`${this.apiUrl}/auth/logout`, {}, { withCredentials: true }).subscribe({
+      next: () => this.user.set(null),
+      error: () => this.user.set(null),
+    });
   }
 
-  private hydrateUser(): void {
+  restoreSession(): Observable<User | null> {
+    return this.http.get<User>(`${this.apiUrl}/auth/me`, { withCredentials: true }).pipe(
+      tap((user) => this.user.set(user)),
+      catchError(() => {
+        this.user.set(null);
+        return of(null);
+      })
+    );
+  }
+
+  getRememberedUsername(): string {
     try {
-      const raw = localStorage.getItem(AuthService.STORAGE_USER_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw) as User | null;
-      if (!parsed) return;
-      if (!parsed.id || !parsed.role || !parsed.name) return;
-      this.user.set(parsed);
+      return localStorage.getItem(AuthService.REMEMBER_USERNAME_KEY) ?? '';
     } catch {
-      // ignore corrupted storage
+      return '';
     }
   }
 
-  private hydrateUsers(): void {
+  private persistRememberedUsername(username: string): void {
     try {
-      const raw = localStorage.getItem(AuthService.STORAGE_USERS_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw) as Array<[string, RegisteredUser]>;
-      if (!Array.isArray(parsed)) return;
-      for (const entry of parsed) {
-        if (!Array.isArray(entry) || entry.length !== 2) continue;
-        const [key, value] = entry;
-        if (!key || !value?.password || !value?.email || !value?.role || !value?.name) continue;
-        if (key.toLowerCase() === 'admin') continue; // keep built-in admin
-        this.users.set(String(key).toLowerCase(), {
-          email: value.email,
-          password: value.password,
-          role: value.role,
-          name: value.name,
-        });
-      }
-    } catch {
-      // ignore corrupted storage
-    }
-  }
-
-  private persistUser(user: User | null): void {
-    try {
-      if (user) {
-        localStorage.setItem(AuthService.STORAGE_USER_KEY, JSON.stringify(user));
+      if (username) {
+        localStorage.setItem(AuthService.REMEMBER_USERNAME_KEY, username);
       } else {
-        localStorage.removeItem(AuthService.STORAGE_USER_KEY);
+        localStorage.removeItem(AuthService.REMEMBER_USERNAME_KEY);
       }
-    } catch {
-      // ignore storage failures (private mode, quota, etc.)
-    }
-  }
-
-  private persistUsers(): void {
-    try {
-      const entries = Array.from(this.users.entries()).filter(([k]) => k !== 'admin');
-      localStorage.setItem(AuthService.STORAGE_USERS_KEY, JSON.stringify(entries));
     } catch {
       // ignore storage failures
     }
+  }
+}
+
+export interface Account {
+  id: number;
+  username: string;
+  email: string;
+  role?: 'USER' | 'ADMIN';
+}
+
+export interface Abbonamento {
+  id: number;
+  nome: string;
+  descrizione: string | null;
+  data_sottoscrizione: string;
+  data_scadenza: string;
+  costo: number;
+  id_account: number;
+}
+
+export type AbbonamentoPayload = Omit<Abbonamento, 'id'>;
+
+export interface DashboardSummary {
+  activeSubscriptions: number;
+  monthlyTotal: number;
+  nextRenewal: Abbonamento | null;
+}
+
+@Injectable({ providedIn: 'root' })
+export class SubscriptionsService {
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = 'http://localhost:8080/api';
+
+  getDashboard(userId: string | number): Observable<DashboardSummary> {
+    return this.http.get<DashboardSummary>(`${this.apiUrl}/dashboard`, { withCredentials: true });
+  }
+
+  getSubscriptions(userId: string | number): Observable<Abbonamento[]> {
+    return this.http.get<Abbonamento[]>(`${this.apiUrl}/abbonamenti`, { withCredentials: true }).pipe(
+      catchError((error) => {
+        if (error.status !== 404) return throwError(() => error);
+        return this.http.get<Abbonamento[]>(`${this.apiUrl}/abbonamento`, { withCredentials: true });
+      })
+    );
+  }
+
+  createSubscription(payload: AbbonamentoPayload): Observable<Abbonamento> {
+    return this.http.post<Abbonamento>(`${this.apiUrl}/abbonamenti`, payload, { withCredentials: true }).pipe(
+      catchError((error) => {
+        if (error.status !== 404) return throwError(() => error);
+        return this.http.post<Abbonamento>(`${this.apiUrl}/abbonamento`, payload, { withCredentials: true });
+      })
+    );
+  }
+
+  updateSubscription(id: number, payload: Partial<AbbonamentoPayload>): Observable<Abbonamento> {
+    return this.http.put<Abbonamento>(`${this.apiUrl}/abbonamenti/${id}`, payload, { withCredentials: true });
+  }
+
+  deleteSubscription(id: number): Observable<{ success: boolean }> {
+    return this.http.delete<{ success: boolean }>(`${this.apiUrl}/abbonamenti/${id}`, { withCredentials: true });
+  }
+
+  getProfile(userId: string | number): Observable<Account> {
+    return this.http.get<Account>(`${this.apiUrl}/account/${userId}`, { withCredentials: true });
+  }
+}
+
+@Injectable({ providedIn: 'root' })
+export class AdminService {
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = 'http://localhost:8080/api/admin';
+
+  getAccounts(): Observable<Account[]> {
+    return this.http.get<Account[]>(`${this.apiUrl}/accounts`, { withCredentials: true });
+  }
+
+  getAbbonamenti(): Observable<Abbonamento[]> {
+    return this.http.get<Abbonamento[]>(`${this.apiUrl}/abbonamenti`, { withCredentials: true });
+  }
+
+  getUsersCount(): Observable<{ total: number }> {
+    return this.http.get<{ total: number }>(`${this.apiUrl}/users/count`, { withCredentials: true });
+  }
+
+  deleteAccount(id: number): Observable<{ success: boolean }> {
+    return this.http.delete<{ success: boolean }>(`${this.apiUrl}/accounts/${id}`, { withCredentials: true });
+  }
+
+  deleteAllUsers(): Observable<{ success: boolean }> {
+    return this.http.delete<{ success: boolean }>(`${this.apiUrl}/users`, { withCredentials: true });
+  }
+
+  resetPassword(id: number): Observable<{ success: boolean; defaultPassword: string }> {
+    return this.http.put<{ success: boolean; defaultPassword: string }>(`${this.apiUrl}/accounts/${id}/reset-password`, {}, { withCredentials: true });
+  }
+
+  deleteAbbonamento(id: number): Observable<{ success: boolean }> {
+    return this.http.delete<{ success: boolean }>(`${this.apiUrl}/abbonamenti/${id}`, { withCredentials: true });
   }
 }

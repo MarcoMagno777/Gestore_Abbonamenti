@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { AuthService } from '../../servizi/services';
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class Login {
+export class Login implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
@@ -21,7 +21,8 @@ export class Login {
 
   loginForm = {
     username: '',
-    password: ''
+    password: '',
+    rememberUsername: false,
   };
 
   registerForm = {
@@ -38,6 +39,14 @@ export class Login {
     return this.authService.currentUser;
   }
 
+  ngOnInit(): void {
+    const rememberedUsername = this.authService.getRememberedUsername();
+    if (rememberedUsername) {
+      this.loginForm.username = rememberedUsername;
+      this.loginForm.rememberUsername = true;
+    }
+  }
+
   toggleMode(): void {
     this.mode = this.mode === 'login' ? 'register' : 'login';
     this.clearMessages();
@@ -51,12 +60,14 @@ export class Login {
       return;
     }
 
-    this.authService.login(this.loginForm.username, this.loginForm.password).subscribe((success) => {
+    this.authService.login(this.loginForm.username, this.loginForm.password, this.loginForm.rememberUsername).subscribe((success) => {
       if (success) {
-        this.router.navigate(['/dashboard']);
+        this.router.navigate([this.authService.isAdmin() ? '/admin' : '/dashboard']);
       } else {
         this.errorMessage = 'Credenziali non valide. Verifica username e password.';
       }
+    }, () => {
+      this.errorMessage = 'Backend non raggiungibile. Riprova tra poco.';
     });
   }
 
@@ -71,12 +82,13 @@ export class Login {
     this.authService.register(this.registerForm.username, this.registerForm.email, this.registerForm.password)
       .subscribe((success) => {
         if (success) {
-          this.successMessage = 'Registrazione completata. Ora effettua il login.';
-          this.mode = 'login';
+          this.router.navigate(['/dashboard']);
           this.registerForm = { username: '', email: '', password: '' };
         } else {
           this.errorMessage = 'Questo username è già registrato.';
         }
+      }, () => {
+        this.errorMessage = 'Registrazione non riuscita. Controlla il backend.';
       });
   }
 
@@ -85,4 +97,3 @@ export class Login {
     this.successMessage = '';
   }
 }
-

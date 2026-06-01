@@ -10,7 +10,7 @@
 
     <div class="welcome-banner">
       <span>Benvenuto!</span>
-      <p>Gestisci abbonamenti, pagamenti e profilo con un’esperienza fluida e animata.</p>
+      <p>Gestisci abbonamenti e profilo con un’esperienza fluida e animata.</p>
     </div>
 
     <div class="tab-switch">
@@ -39,6 +39,11 @@
           <input type="password" name="password" [(ngModel)]="loginForm.password" placeholder="Inserisci password" />
         </label>
 
+        <label class="remember-row">
+          <input type="checkbox" name="rememberUsername" [(ngModel)]="loginForm.rememberUsername" />
+          Ricordami
+        </label>
+
         <button type="submit" class="primary-btn">Accedi</button>
       </form>
 
@@ -65,4 +70,3 @@
     </div>
   </section>
 </div>
-

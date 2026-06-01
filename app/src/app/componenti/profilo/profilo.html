@@ -1,0 +1,27 @@
+<section class="workspace">
+  <header>
+    <span class="eyebrow">Profilo</span>
+    <h1>Informazioni account</h1>
+    <p>Visualizza i dati dell’account senza modificarli.</p>
+  </header>
+
+  <p *ngIf="loading" class="state">Caricamento profilo...</p>
+  <p *ngIf="errorMessage" class="state error">{{ errorMessage }}</p>
+
+  <div *ngIf="!loading && profile" class="profile-card">
+    <div>
+      <span>ID account</span>
+      <strong>{{ profile.id || '-' }}</strong>
+    </div>
+
+    <div>
+      <span>Username</span>
+      <strong>{{ profile.username }}</strong>
+    </div>
+
+    <div>
+      <span>Email</span>
+      <strong>{{ profile.email || '-' }}</strong>
+    </div>
+  </div>
+</section>
