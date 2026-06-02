@@ -209,6 +209,40 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
+/* Bottone Logout */
+
+.logout-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 42px;
+  padding: 0 16px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.25);
+  color: #fecaca;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(239, 68, 68, 0.2);
+}
+
 /* Bottone menu mobile */
 
 .menu-toggle {

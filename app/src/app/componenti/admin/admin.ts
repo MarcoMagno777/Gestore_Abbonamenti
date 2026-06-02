@@ -61,6 +61,7 @@ export class Admin implements OnInit {
     this.adminService.deleteAccount(this.selectedAccountId).subscribe({
       next: () => {
         this.successMessage = 'Utente eliminato.';
+        this.scheduleMessageClear();
         this.loadAdminData();
       },
       error: () => {
@@ -74,6 +75,7 @@ export class Admin implements OnInit {
     this.adminService.deleteAllUsers().subscribe({
       next: () => {
         this.successMessage = 'Utenti eliminati. Admin mantenuto.';
+        this.scheduleMessageClear();
         this.loadAdminData();
       },
       error: () => {
@@ -89,6 +91,7 @@ export class Admin implements OnInit {
     this.adminService.resetPassword(this.selectedAccountId).subscribe({
       next: (result) => {
         this.successMessage = `Password resettata a ${result.defaultPassword}.`;
+        this.scheduleMessageClear();
       },
       error: () => {
         this.errorMessage = 'Reset password non riuscito.';
@@ -97,8 +100,11 @@ export class Admin implements OnInit {
   }
 
   deleteAbbonamento(abbonamento: Abbonamento): void {
+    this.clearMessages();
     this.adminService.deleteAbbonamento(abbonamento.id).subscribe({
       next: () => {
+        this.successMessage = 'Abbonamento eliminato.';
+        this.scheduleMessageClear();
         this.abbonamenti = this.abbonamenti.filter((item) => item.id !== abbonamento.id);
       },
       error: () => {
@@ -110,6 +116,12 @@ export class Admin implements OnInit {
   private clearMessages(): void {
     this.errorMessage = '';
     this.successMessage = '';
+  }
+
+  private scheduleMessageClear(): void {
+    setTimeout(() => {
+      this.successMessage = '';
+    }, 3000);
   }
 
   private loadAbbonamenti(): void {

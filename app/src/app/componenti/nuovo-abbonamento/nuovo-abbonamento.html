@@ -2,11 +2,9 @@
   <header>
     <span class="eyebrow">Nuovo abbonamento</span>
     <h1>Aggiungi abbonamento</h1>
-    <p>Il form invia i dati al backend tramite il servizio Angular.</p>
   </header>
 
   <p *ngIf="errorMessage" class="state error">{{ errorMessage }}</p>
-
   <form class="subscription-form" (ngSubmit)="saveSubscription()">
     <label>
       Nome
