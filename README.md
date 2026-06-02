@@ -17,8 +17,8 @@ docker compose up --build
 
 Poi apri:
 
-- Frontend React: http://localhost:5173
-- API PHP/Slim: http://localhost:8080/alunni
+- Frontend React: http://localhost:4200
+- API PHP/Slim: http://localhost:8080
 
 ## phpMyAdmin
 
